@@ -42,7 +42,7 @@ export function App() {
   function deleteOrder(orderId: number) {
     const filteredOrders = orders.filter((order) => order.id !== orderId)
 
-    setOrders((state) => {
+    setOrders(() => {
       const newState = filteredOrders
 
       localStorage.setItem('planilha-pedidos-gustavo', JSON.stringify(newState))

@@ -9,7 +9,7 @@ import {
   DialogClose,
 } from './ui/dialog'
 import { Input } from './ui/input'
-import { date, z } from 'zod'
+import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Order } from '@/app'
 import { formatCurrency } from '@/utils/format-currency'
