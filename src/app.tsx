@@ -70,9 +70,7 @@ export function App() {
       <div className="w-full h-full mx-auto lg:max-w-[1000px]">
         <header className="flex items-center p-4">
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-foreground">
-              Planilha de Comissões
-            </h1>
+            <h1 className="text-2xl font-bold text-foreground">Gustavo</h1>
           </div>
 
           <div className="flex items-center gap-4">
