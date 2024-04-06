@@ -9,30 +9,31 @@ import {
   DialogClose,
 } from './ui/dialog'
 import { Input } from './ui/input'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Order } from '@/app'
 import { formatCurrency } from '@/utils/format-currency'
+import { FormError } from './form-error'
+import {
+  NewOrderFormSchema,
+  NewOrderSchema,
+} from '@/validations/new-order-form-schema'
 
 interface NewOrderDialogContentProps {
   createOrder: (order: Order) => void
 }
 
-const newOrderSchema = z.object({
-  createdAt: z.string(),
-  orderNumber: z.string(),
-  customerName: z.string(),
-  totalValue: z.string(),
-  commissionPorcentage: z.string(),
-})
-
-type NewOrderSchema = z.infer<typeof newOrderSchema>
-
 export function NewOrderDialogContent({
   createOrder,
 }: NewOrderDialogContentProps) {
-  const { register, watch, handleSubmit, reset } = useForm<NewOrderSchema>({
-    resolver: zodResolver(newOrderSchema),
+  const {
+    register,
+    watch,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<NewOrderSchema>({
+    resolver: zodResolver(NewOrderFormSchema),
+    mode: 'all',
   })
 
   const totalValue = watch('totalValue')
@@ -60,6 +61,9 @@ export function NewOrderDialogContent({
     reset()
   }
 
+  console.log(errors)
+  console.log(isValid)
+
   return (
     <DialogContent className="w-full">
       <DialogHeader className="text-left">
@@ -80,26 +84,39 @@ export function NewOrderDialogContent({
               value: new Date().toISOString().split('T')[0],
             })}
           />
+          {errors.createdAt && <FormError message={errors.createdAt.message} />}
 
           <Input
             type="number"
             placeholder="Número do pedido"
             {...register('orderNumber')}
           />
+          {errors.orderNumber && (
+            <FormError message={errors.orderNumber.message} />
+          )}
 
           <Input placeholder="Cliente" {...register('customerName')} />
+          {errors.customerName && (
+            <FormError message={errors.customerName.message} />
+          )}
 
           <Input
             type="number"
             placeholder="Valor"
             {...register('totalValue')}
           />
+          {errors.totalValue && (
+            <FormError message={errors.totalValue.message} />
+          )}
 
           <Input
             type="number"
             placeholder="Comissão (%)"
             {...register('commissionPorcentage')}
           />
+          {errors.commissionPorcentage && (
+            <FormError message={errors.commissionPorcentage.message} />
+          )}
 
           <p className="text-muted-foreground">
             Comissão: {formatCurrency(commission)}
@@ -112,7 +129,13 @@ export function NewOrderDialogContent({
           </DialogClose>
 
           <DialogClose asChild>
-            <Button type="submit">Criar</Button>
+            <Button
+              className="disabled:cursor-not-allowed disabled:opacity-60"
+              type="submit"
+              disabled={!isValid}
+            >
+              Criar
+            </Button>
           </DialogClose>
         </DialogFooter>
       </form>
