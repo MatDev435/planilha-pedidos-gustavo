@@ -1,4 +1,4 @@
-import { date, z } from 'zod'
+import { z } from 'zod'
 
 export const NewOrderFormSchema = z.object({
   createdAt: z.string(),
@@ -12,4 +12,4 @@ export const NewOrderFormSchema = z.object({
   commissionPorcentage: z.string().min(1, 'A comissão é obrigatória'),
 })
 
-export type NewOrderSchema = z.infer<typeof newOrderSchema>
+export type NewOrderSchema = z.infer<typeof NewOrderFormSchema>
