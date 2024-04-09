@@ -40,7 +40,17 @@ export function NewOrderDialogContent({
   const commissionPorcentage = watch('commissionPorcentage')
 
   const commission =
-    (parseFloat(totalValue) * parseFloat(commissionPorcentage)) / 100 || 0
+    (parseFloat(
+      String(totalValue).includes(',')
+        ? totalValue.replace(',', '.')
+        : totalValue,
+    ) *
+      parseFloat(
+        String(commissionPorcentage).includes(',')
+          ? commissionPorcentage.replace(',', '.')
+          : commissionPorcentage,
+      )) /
+      100 || 0
 
   async function handleCreateNewOrder(data: NewOrderSchema) {
     const date = new Date(
@@ -52,17 +62,16 @@ export function NewOrderDialogContent({
       ...data,
       id: Math.floor(Math.random() * 100),
       createdAt: date,
-      orderNumber: Number(data.orderNumber),
-      totalValue: Number(data.totalValue),
-      commissionPorcentage: Number(data.commissionPorcentage),
+      orderNumber: data.orderNumber,
+      totalValue: Number(String(data.totalValue).replace(',', '.')),
+      commissionPorcentage: Number(
+        String(data.commissionPorcentage).replace(',', '.'),
+      ),
       commission,
     })
 
     reset()
   }
-
-  console.log(errors)
-  console.log(isValid)
 
   return (
     <DialogContent className="w-full">
@@ -72,7 +81,7 @@ export function NewOrderDialogContent({
         </DialogTitle>
 
         <DialogDescription className="text-muted-foreground text-lg">
-          Adicioe um novo pedido
+          Adicione um novo pedido
         </DialogDescription>
       </DialogHeader>
 
@@ -100,17 +109,13 @@ export function NewOrderDialogContent({
             <FormError message={errors.customerName.message} />
           )}
 
-          <Input
-            type="number"
-            placeholder="Valor"
-            {...register('totalValue')}
-          />
+          <Input type="text" placeholder="Valor" {...register('totalValue')} />
           {errors.totalValue && (
             <FormError message={errors.totalValue.message} />
           )}
 
           <Input
-            type="number"
+            type="text"
             placeholder="Comissão (%)"
             {...register('commissionPorcentage')}
           />
@@ -128,7 +133,7 @@ export function NewOrderDialogContent({
             <Button variant="secondary">Cancelar</Button>
           </DialogClose>
 
-          <DialogClose asChild>
+          <DialogClose>
             <Button
               className="disabled:cursor-not-allowed disabled:opacity-60"
               type="submit"

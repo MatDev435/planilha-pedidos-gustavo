@@ -19,7 +19,7 @@ import { Dialog, DialogTrigger } from './components/ui/dialog'
 export interface Order {
   id: number
   createdAt: Date
-  orderNumber: number
+  orderNumber: string
   customerName: string
   totalValue: number
   commissionPorcentage: number
