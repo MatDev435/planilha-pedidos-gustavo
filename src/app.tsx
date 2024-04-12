@@ -15,6 +15,7 @@ import { OrderTableRow } from './components/order-table-row'
 import { useEffect, useState } from 'react'
 import { NewOrderDialogContent } from './components/new-order-dialog-content'
 import { Dialog, DialogTrigger } from './components/ui/dialog'
+import { Input } from './components/ui/input'
 
 export interface Order {
   id: number
@@ -27,6 +28,9 @@ export interface Order {
 }
 
 export function App() {
+  const [orderNumber, setOrderNumber] = useState('')
+  const [customerName, setCustomerName] = useState('')
+
   const [orders, setOrders] = useState<Order[]>([])
 
   function createNewOrder(order: Order) {
@@ -59,8 +63,22 @@ export function App() {
     }
   }, [])
 
-  const revenue = orders.reduce((total, order) => total + order.totalValue, 0)
-  const commission = orders.reduce(
+  function getFilteredOrders() {
+    return orders.filter(
+      (order) =>
+        order.orderNumber.includes(orderNumber) &&
+        order.customerName.toLowerCase().includes(customerName.toLowerCase()),
+    )
+  }
+
+  const filteredOrders = getFilteredOrders()
+  console.log(filteredOrders)
+
+  const revenue = filteredOrders.reduce(
+    (total, order) => total + order.totalValue,
+    0,
+  )
+  const commission = filteredOrders.reduce(
     (total, order) => total + order.commission,
     0,
   )
@@ -87,11 +105,27 @@ export function App() {
             </Dialog>
           </div>
         </header>
-
         <section className="grid grid-cols-1 gap-4 px-4 mb-4 md:grid-cols-2">
           <RevenueCard revenue={revenue} ordersAmount={orders.length} />
           <CommissionCard commission={commission} />
         </section>
+
+        <div className="p-4 mb-4">
+          <span className="text-lg text-foreground">Filtros</span>
+
+          <div className="text-md grid grid-cols-2 gap-4 mt-4">
+            <Input
+              placeholder="Número do pedido"
+              value={orderNumber}
+              onChange={(e) => setOrderNumber(e.target.value)}
+            />
+
+            <Input
+              placeholder="Nome do cliente"
+              onChange={(e) => setCustomerName(e.target.value)}
+            />
+          </div>
+        </div>
 
         <Table>
           <TableHeader>
@@ -107,8 +141,8 @@ export function App() {
           </TableHeader>
 
           <TableBody>
-            {orders ? (
-              orders.map((order) => {
+            {filteredOrders ? (
+              filteredOrders.map((order) => {
                 return (
                   <OrderTableRow
                     key={order.id}
