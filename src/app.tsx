@@ -37,7 +37,7 @@ export function App() {
     setOrders((state) => {
       const newState = [order, ...state]
 
-      // localStorage.setItem('planilha-pedidos-gustavo', JSON.stringify(newState))
+      localStorage.setItem('planilha-pedidos-gustavo', JSON.stringify(newState))
 
       return newState
     })
@@ -49,19 +49,19 @@ export function App() {
     setOrders(() => {
       const newState = filteredOrders
 
-      // localStorage.setItem('planilha-pedidos-gustavo', JSON.stringify(newState))
+      localStorage.setItem('planilha-pedidos-gustavo', JSON.stringify(newState))
 
       return newState
     })
   }
 
-  // useEffect(() => {
-  //   const storagedOrders = localStorage.getItem('planilha-pedidos-gustavo')
+  useEffect(() => {
+    const storagedOrders = localStorage.getItem('planilha-pedidos-gustavo')
 
-  //   if (storagedOrders) {
-  //     setOrders(JSON.parse(storagedOrders))
-  //   }
-  // }, [])
+    if (storagedOrders) {
+      setOrders(JSON.parse(storagedOrders))
+    }
+  }, [])
 
   function getFilteredOrders() {
     return orders.filter(
