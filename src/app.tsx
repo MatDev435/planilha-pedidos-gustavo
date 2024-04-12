@@ -105,7 +105,7 @@ export function App() {
           </div>
         </header>
         <section className="grid grid-cols-1 gap-4 px-4 mb-4 md:grid-cols-2">
-          <RevenueCard revenue={revenue} ordersAmount={orders.length} />
+          <RevenueCard revenue={revenue} ordersAmount={filteredOrders.length} />
           <CommissionCard commission={commission} />
         </section>
 
