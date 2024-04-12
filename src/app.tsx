@@ -72,7 +72,6 @@ export function App() {
   }
 
   const filteredOrders = getFilteredOrders()
-  console.log(filteredOrders)
 
   const revenue = filteredOrders.reduce(
     (total, order) => total + order.totalValue,
